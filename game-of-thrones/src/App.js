@@ -15,7 +15,11 @@ export default class App extends Component {
       regionS:null,
       coatS:null,
       seatS:null,
-      aliaS:null
+      aliaS:null,
+      founderS:null,
+      name1:null,
+      name2:null,
+      name3:null
     }
   }
    bornex(){
@@ -51,9 +55,30 @@ export default class App extends Component {
   }
   async alias()
   {
-    const res=await axios.get('/https://www.anapioficeandfire.com/api/characters/901')
+    const res=await axios.get('https://www.anapioficeandfire.com/api/characters/901')
    this.setState({ aliaS: res.data.aliases[1] });
 
+  }
+  async founder(){
+
+    const res=await axios.get('https://www.anapioficeandfire.com/api/houses/362');
+    const res1=await axios.get(res.data.founder);
+    this.setState({ founderS: res1.data.name });
+
+  }
+  async promiseal(){
+    const res=await axios.get('https://www.anapioficeandfire.com/api/characters/232');
+    const res1=res.data.povBooks;
+    console.log(res.data.povBooks);
+    Promise.all([axios.get(res1[0]),
+    axios.get(res1[1]),
+      axios.get(res1[2])]).then(([result1,result2,result3])=>{
+this.setState({name1:result1.data.name,
+  name2:result2.data.name,
+  name3:result3.data.name}
+
+    );
+});
   }
   
   componentDidMount(){
@@ -63,6 +88,8 @@ export default class App extends Component {
    this.coat();
     this.seat();
    this.alias();
+   this.founder();
+   this.promiseal();
   }
   
   render() {
@@ -74,6 +101,10 @@ export default class App extends Component {
          {/* coatOfArms:<h1> {this.state.coatS} </h1> */}
         Seat:<h1> {this.state.seatS} </h1> 
         Alias:<h1> {this.state.aliaS} </h1>
+        Founder:<h1> {this.state.founderS} </h1>
+        Title1:<h1> {this.state.name1} </h1>
+        Title2:<h1> {this.state.name2} </h1>
+        Title3:<h1> {this.state.name3} </h1>
       </div>
     )
   }
